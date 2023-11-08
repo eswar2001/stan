@@ -1,6 +1,7 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/2e87d165f74411ae00f964a508945696969ff53d";
+    # nixpkgs.url = "github:nixos/nixpkgs/2e87d165f74411ae00f964a508945696969ff53d";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     haskell-flake.url = "github:srid/haskell-flake";
     flake-parts.url = "github:hercules-ci/flake-parts";
     systems.url = "github:nix-systems/default";
@@ -18,7 +19,12 @@
           # The base package set representing a specific GHC version.
           # By default, this is pkgs.haskellPackages.
           # You may also create your own. See https://zero-to-flakes.com/haskell-flake/package-set
-          basePackages = pkgs.haskell.packages.ghc8107;
+          # basePackages = pkgs.haskell.packages.ghc8107;
+          packages = {
+            clay.source = "0.14.0";
+            optparse-applicative.source = "0.16.1.0";
+            pretty-simple.source = "4.0.0.0";
+          };
 
           # Extra package information. See https://zero-to-flakes.com/haskell-flake/dependency
           #
@@ -29,13 +35,6 @@
           #   aeson.source = "1.5.0.0"; # Hackage version override
           #   shower.source = inputs.shower; 
           # };
-          settings = { 
-            stan = {
-              haddock = false;
-              check = false;
-              jailbreak = true;
-            };
-          };
 
           # devShell = {
           #  # Enabled by default
