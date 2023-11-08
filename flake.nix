@@ -1,7 +1,8 @@
 {
   inputs = {
     # nixpkgs.url = "github:nixos/nixpkgs/2e87d165f74411ae00f964a508945696969ff53d";
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/release-23.05";
+
     haskell-flake.url = "github:srid/haskell-flake";
     flake-parts.url = "github:hercules-ci/flake-parts";
     systems.url = "github:nix-systems/default";
@@ -11,7 +12,12 @@
       systems = import inputs.systems;
       imports = [ inputs.haskell-flake.flakeModule ];
 
-      perSystem = { self', pkgs, ... }: {
+      perSystem = { self', pkgs, system, ... }: {
+        # trial-tomland from haskell package set is marked broken
+        _module.args.pkgs = import nixpkgs {
+          config.allowBroken = true;
+          inherit system;
+        };
 
         # Typically, you just want a single project named "default". But
         # multiple projects are also possible, each using different GHC version.
@@ -19,11 +25,12 @@
           # The base package set representing a specific GHC version.
           # By default, this is pkgs.haskellPackages.
           # You may also create your own. See https://zero-to-flakes.com/haskell-flake/package-set
-          # basePackages = pkgs.haskell.packages.ghc8107;
+          basePackages = pkgs.haskell.packages.ghc8107;
           packages = {
             clay.source = "0.14.0";
             optparse-applicative.source = "0.16.1.0";
             pretty-simple.source = "4.0.0.0";
+            fourmolu.source = "0.14.0.0";
           };
 
           # Extra package information. See https://zero-to-flakes.com/haskell-flake/dependency
