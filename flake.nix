@@ -12,7 +12,12 @@
       systems = import inputs.systems;
       imports = [ inputs.haskell-flake.flakeModule ];
 
-      perSystem = { self', pkgs, ... }: {
+      perSystem = { self', pkgs, system, ... }: {
+        # trial-tomland from haskell package set is marked broken
+        _module.args.pkgs = import nixpkgs {
+          config.allowBroken = true;
+          inherit system;
+        };
 
         # Typically, you just want a single project named "default". But
         # multiple projects are also possible, each using different GHC version.
