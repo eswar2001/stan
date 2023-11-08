@@ -1,12 +1,13 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    flake-parts.url = "github:hercules-ci/flake-parts";
+    nixpkgs.url = "github:nixos/nixpkgs/2e87d165f74411ae00f964a508945696969ff53d";
     haskell-flake.url = "github:srid/haskell-flake";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    systems.url = "github:nix-systems/default";
   };
   outputs = inputs@{ self, nixpkgs, flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = nixpkgs.lib.systems.flakeExposed;
+      systems = import inputs.systems;
       imports = [ inputs.haskell-flake.flakeModule ];
 
       perSystem = { self', pkgs, ... }: {
@@ -17,7 +18,7 @@
           # The base package set representing a specific GHC version.
           # By default, this is pkgs.haskellPackages.
           # You may also create your own. See https://zero-to-flakes.com/haskell-flake/package-set
-          # basePackages = pkgs.haskell.packages.ghc8107;
+          basePackages = pkgs.haskell.packages.ghc8107;
 
           # Extra package information. See https://zero-to-flakes.com/haskell-flake/dependency
           #
